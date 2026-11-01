@@ -7,6 +7,9 @@ import { devLoginEnabled, upsertDevUser, upsertDiscordUser } from '@/server/user
 
 const providers: Provider[] = [
   Discord({
+    // Discord now sends `iss=https://discord.com` on the callback (RFC 9207). Without a declared
+    // issuer, Auth.js compares it to its placeholder (https://authjs.dev) and rejects the login.
+    issuer: 'https://discord.com',
     // FriendlyFire's application. guilds.members.read gives us the server nickname and avatar
     // without adding anything to the guild. prompt=none skips the consent screen after the first time.
     authorization: { params: { scope: 'identify guilds.members.read', prompt: 'none' } },
