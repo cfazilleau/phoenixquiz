@@ -44,7 +44,6 @@ cp .env.example .env
 | `AUTH_DISCORD_ID` / `AUTH_DISCORD_SECRET` | FriendlyFire's OAuth2 credentials |
 | `DISCORD_GUILD_ID` | Server whose nicknames/avatars are shown |
 | `SUPERADMIN_DISCORD_ID` | Comma-separated Discord IDs that are always super-admin |
-| `TUNNEL_TOKEN` | Cloudflare tunnel token (docker compose) |
 | `DEV_LOGIN` | `true` enables fake logins (never in production) |
 
 The Atlas user needs read/write access to the `phoenixquiz` database.
@@ -66,13 +65,17 @@ npm run typecheck
 npm run build && npm start
 ```
 
-### 4. Deploy (Docker + Cloudflare Tunnel)
+### 4. Deploy (Docker)
 
 ```bash
 docker compose up -d --build
 ```
 
-In Cloudflare Zero Trust, create a tunnel, put its token in `TUNNEL_TOKEN`, and add the public hostname **app.phxlgc.com → `http://app:3000`**. WebSockets are proxied automatically.
+The app listens on port **3000** of the host. Whatever serves `https://app.phxlgc.com` in front of it (e.g. a reverse proxy) must:
+
+- forward requests to port 3000,
+- pass **WebSocket upgrades** through on `/socket.io/` (the `Upgrade` and `Connection` headers). Without them, players fall back to slower HTTP long-polling,
+- send `X-Forwarded-Proto: https`, so sign-in cookies are marked secure. `AUTH_URL` must be the public `https://` URL.
 
 Images are published to `ghcr.io/cfazilleau/phoenixquiz` when a `version/*` tag is pushed (`.github/workflows/docker.yml`).
 
