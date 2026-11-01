@@ -335,6 +335,17 @@ export class LiveGame {
         this.s.buzzer = { ...emptyBuzzer(), lockedOut };
         return this.commit();
       }
+      case 'addQuestion': {
+        if (this.s.status === 'ended') return fail('invalid_state');
+        const q: Question = { ...action.question, imageUrl: action.question.imageUrl || null };
+        if (this.s.questions.some((x) => x.id === q.id)) q.id = `${q.id}-${Date.now().toString(36)}`;
+        // In the lobby the question joins the end of the queue; during the game it plays next.
+        const at = this.s.status === 'lobby' ? this.s.questions.length : this.s.index + 1;
+        this.s.questions.splice(at, 0, q);
+        if (!action.launch) return this.commit();
+        if (this.s.status === 'lobby') this.s.startedAt = Date.now();
+        return this.goto(at);
+      }
       case 'buzzerJudge': {
         const q = this.currentQuestion;
         if (!q || q.type !== 'buzzer') return fail('invalid_state');

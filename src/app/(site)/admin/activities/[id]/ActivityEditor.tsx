@@ -66,7 +66,10 @@ export function ActivityEditor({ initial }: { initial: ActivityData }) {
       if (res.ok) {
         setDirty(false);
         setStatus({ kind: 'ok', text: t('saved') });
-      } else setStatus({ kind: 'error', text: t('saveError', { error: res.error }) });
+      } else {
+        const error = (res.question ? `#${res.question} · ` : '') + t(`issues.${res.issue}`);
+        setStatus({ kind: 'error', text: t('saveError', { error }) });
+      }
     });
 
   return (
@@ -144,7 +147,7 @@ export function ActivityEditor({ initial }: { initial: ActivityData }) {
           </Button>
           <form action={startSessionAction}>
             <input type="hidden" name="activityId" value={initial.id} />
-            <Button variant="secondary" disabled={dirty || questions.length === 0} title={dirty ? t('saveFirst') : ''}>
+            <Button variant="secondary" disabled={dirty} title={dirty ? t('saveFirst') : ''}>
               ▶ {t('startSession')}
             </Button>
           </form>

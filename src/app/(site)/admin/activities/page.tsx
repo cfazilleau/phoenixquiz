@@ -37,9 +37,7 @@ export default async function ActivitiesPage() {
             <div className="mt-auto flex flex-wrap gap-2">
               <form action={startSessionAction}>
                 <input type="hidden" name="activityId" value={a.id} />
-                <Button size="sm" disabled={a.questionCount === 0}>
-                  ▶ {t('start')}
-                </Button>
+                <Button size="sm">▶ {t('start')}</Button>
               </form>
               <Link href={`/admin/activities/${a.id}`}>
                 <Button size="sm" variant="secondary">

@@ -8,28 +8,5 @@ services:
       - .env
     environment:
       - NODE_ENV=production
-    expose:
-      - "3000"
-    # Uncomment to reach the app directly on the host (without the tunnel):
-    # ports:
-    #   - "3000:3000"
-    networks:
-      - phoenixquiz
-
-  # Exposes the app at https://app.phxlgc.com. In the Cloudflare Zero Trust dashboard,
-  # point the tunnel's public hostname app.phxlgc.com to http://app:3000.
-  cloudflared:
-    container_name: phoenixquiz-tunnel
-    image: cloudflare/cloudflared:latest
-    restart: unless-stopped
-    command: tunnel --no-autoupdate run
-    environment:
-      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
-    depends_on:
-      - app
-    networks:
-      - phoenixquiz
-
-networks:
-  phoenixquiz:
-    name: phoenixquiz
+    ports:
+      - "3000:3000"

@@ -73,7 +73,11 @@
       "results": "Results",
       "control": "Control panel",
       "delete": "Delete",
-      "back": "All sessions"
+      "back": "All sessions",
+      "newLive": "New live session",
+      "livePlaceholder": "Live session title",
+      "liveDefaultTitle": "Live quiz",
+      "liveHint": "Start a session with no prepared questions and write them during the game"
     },
     "users": {
       "title": "Users",
@@ -123,7 +127,21 @@
     "saveError": "Could not save: {error}",
     "unsaved": "Unsaved changes",
     "saveFirst": "Save before starting",
-    "startSession": "Start a session"
+    "startSession": "Start a session",
+    "issues": {
+      "prompt_empty": "write the question",
+      "option_empty": "every option needs a text",
+      "answer_empty": "accepted answers can't be empty",
+      "image_url": "the image URL is invalid",
+      "time_limit": "the time limit must be between 5 and 600 seconds (or empty)",
+      "options_min": "add at least 2 options",
+      "one_correct": "mark exactly one correct option",
+      "some_correct": "mark at least one correct option",
+      "accepted_min": "add at least one accepted answer",
+      "number_missing": "enter the correct number",
+      "title_empty": "the activity needs a title",
+      "invalid": "something is invalid"
+    }
   },
   "game": {
     "connecting": "Connecting…",
@@ -190,6 +208,19 @@
     "answeredOf": "{answered} / {total} answered",
     "expected": "Expected:",
     "lobbyHelp": "Share the code or open the presenter screen. Players appear on the right as they join. Press Start when everyone is in.",
+    "lobbyHelpLive": "This session has no questions yet. Share the code, then write the first question below and launch it when everyone is in.",
+    "live": {
+      "title": "Live question",
+      "hint": "Pick a type to write a new question on the fly. It plays right after the current one, or right now.",
+      "launch": "Launch now",
+      "queueNext": "Play it next",
+      "queueLobby": "Add to the list",
+      "discard": "Discard",
+      "invalid": "Not ready: {error}",
+      "saveAsActivity": "Save as activity",
+      "savedAsActivity": "Saved as activity",
+      "saveFailed": "Save failed, retry"
+    },
     "answers": "Answers ({count})",
     "noAnswers": "No answers yet.",
     "overridden": "edited",
