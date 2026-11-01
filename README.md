@@ -1,6 +1,6 @@
 # 🔥 PhoenixQuiz
 
-Kahoot-style live quizzes for the community, at **https://app.phxlgc.com**.
+Kahoot-style live quizzes for the community, at **https://quiz.cfaz.dev**.
 
 - Players sign in with **Discord**. Their **server nickname and server avatar** are used when they are in the guild.
 - Admins build **activities** with six question types: single choice, multiple choice, true/false, open answer, number guess and **buzzer**.
@@ -24,7 +24,7 @@ No new app is added to the guild: the website uses FriendlyFire's application fo
 1. Open the [Discord Developer Portal](https://discord.com/developers/applications), then FriendlyFire, then **OAuth2**.
 2. Copy the **Client ID** into `AUTH_DISCORD_ID` and the **Client Secret** into `AUTH_DISCORD_SECRET`. This is the OAuth2 secret, not the bot token.
 3. Add these redirect URIs:
-   - `https://app.phxlgc.com/api/auth/callback/discord`
+   - `https://quiz.cfaz.dev/api/auth/callback/discord`
    - `http://localhost:3000/api/auth/callback/discord` (development)
 
 The app requests the `identify` and `guilds.members.read` scopes. The second one reads the user's nickname and avatar on the `DISCORD_GUILD_ID` server at sign-in. Players outside the server get their global profile instead.
@@ -40,7 +40,7 @@ cp .env.example .env
 | `MONGODB_URI` | The FriendlyFire Atlas cluster |
 | `MONGODB_DB` | `phoenixquiz` in production, `phoenixquiz_dev` locally |
 | `AUTH_SECRET` | `npx auth secret` |
-| `AUTH_URL` | `https://app.phxlgc.com` (or `http://localhost:3000` locally) |
+| `AUTH_URL` | `https://quiz.cfaz.dev` (or `http://localhost:3000` locally) |
 | `AUTH_DISCORD_ID` / `AUTH_DISCORD_SECRET` | FriendlyFire's OAuth2 credentials |
 | `DISCORD_GUILD_ID` | Server whose nicknames/avatars are shown |
 | `SUPERADMIN_DISCORD_ID` | Comma-separated Discord IDs that are always super-admin |
@@ -71,7 +71,7 @@ npm run build && npm start
 docker compose up -d --build
 ```
 
-The app listens on port **3000** of the host. Whatever serves `https://app.phxlgc.com` in front of it (e.g. a reverse proxy) must:
+The app listens on port **3000** of the host. Whatever serves `https://quiz.cfaz.dev` in front of it (e.g. a reverse proxy) must:
 
 - forward requests to port 3000,
 - pass **WebSocket upgrades** through on `/socket.io/` (the `Upgrade` and `Connection` headers). Without them, players fall back to slower HTTP long-polling,
@@ -97,7 +97,7 @@ When a session has ended, **Post results to Discord** in the control panel inser
 
 1. **Admin → Activities**: create an activity, add questions, drag to reorder, then **Save**.
 2. **▶ Start**: this creates a session with a 6-character join code and opens the control panel.
-3. Open the **presenter screen** (or copy its link into OBS). Players join at `app.phxlgc.com/join` or by scanning the QR code.
+3. Open the **presenter screen** (or copy its link into OBS). Players join at `quiz.cfaz.dev/join` or by scanning the QR code.
 4. Run the game: **Start**, then **Reveal**, **Leaderboard** and **Next**. Questions with a time limit close themselves. Others close with **Close answers**.
 5. **Buzzer questions**: the first press locks the buzzer. Mark the answer ✓/✗ to award points, then **Reset** or **Reset & lock out** to let others try.
 6. At the end: **Export .xlsx** and/or **Post results to Discord**.
