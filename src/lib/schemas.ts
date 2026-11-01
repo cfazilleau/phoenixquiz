@@ -21,25 +21,61 @@ export const questionSchema = z
     tolerance: z.number().finite().min(0).nullable().optional(),
   })
   .superRefine((q, ctx) => {
-    const issue = (message: string) => ctx.addIssue({ code: 'custom', message, path: ['prompt'] });
+    // Messages are QuestionIssue keys, translated by the UI (editor.issues.*).
+    const issue = (message: QuestionIssue) => ctx.addIssue({ code: 'custom', message, path: ['type'] });
     switch (q.type) {
       case 'single':
       case 'truefalse':
-        if (q.options.length < 2) issue('needs at least 2 options');
-        if (q.options.filter((o) => o.correct).length !== 1) issue('needs exactly 1 correct option');
+        if (q.options.length < 2) issue('options_min');
+        if (q.options.filter((o) => o.correct).length !== 1) issue('one_correct');
         break;
       case 'multiple':
-        if (q.options.length < 2) issue('needs at least 2 options');
-        if (q.options.filter((o) => o.correct).length < 1) issue('needs at least 1 correct option');
+        if (q.options.length < 2) issue('options_min');
+        if (q.options.filter((o) => o.correct).length < 1) issue('some_correct');
         break;
       case 'open':
-        if (q.acceptedAnswers.length < 1) issue('needs at least 1 accepted answer');
+        if (q.acceptedAnswers.length < 1) issue('accepted_min');
         break;
       case 'number':
-        if (q.numberAnswer == null) issue('needs a numeric answer');
+        if (q.numberAnswer == null) issue('number_missing');
         break;
     }
   });
+
+export type QuestionIssue =
+  | 'prompt_empty'
+  | 'option_empty'
+  | 'answer_empty'
+  | 'image_url'
+  | 'time_limit'
+  | 'options_min'
+  | 'one_correct'
+  | 'some_correct'
+  | 'accepted_min'
+  | 'number_missing'
+  | 'title_empty'
+  | 'invalid';
+
+/** Maps a validation issue on a question (path relative to the question) to a translatable key. */
+export function questionIssueKey(issue: { code: string; message: string; path: PropertyKey[] }): QuestionIssue {
+  if (issue.code === 'custom') return issue.message as QuestionIssue;
+  switch (issue.path[0]) {
+    case 'prompt':
+      return 'prompt_empty';
+    case 'options':
+      return 'option_empty';
+    case 'acceptedAnswers':
+      return 'answer_empty';
+    case 'imageUrl':
+      return 'image_url';
+    case 'timeLimitSec':
+      return 'time_limit';
+    case 'title':
+      return 'title_empty';
+    default:
+      return 'invalid';
+  }
+}
 
 export const activityInputSchema = z.object({
   title: z.string().trim().min(1).max(120),
@@ -89,5 +125,7 @@ export const adminActionSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('buzzerUnlock') }),
   z.object({ type: z.literal('buzzerReset'), lockOutPrevious: z.boolean().default(false) }),
   z.object({ type: z.literal('buzzerJudge'), userId: z.string().min(1), correct: z.boolean() }),
+  /** Live authoring: insert a question right after the current one, optionally launching it. */
+  z.object({ type: z.literal('addQuestion'), question: questionSchema, launch: z.boolean().default(false) }),
 ]);
 export type AdminAction = z.infer<typeof adminActionSchema>;

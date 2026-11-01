@@ -14,6 +14,8 @@ export const mongoStore: GameStore = {
       { _id: s.sessionId },
       {
         $set: {
+          // Questions can be added live, so the snapshot is saved along with the state.
+          activitySnapshot: s.questions,
           status: s.status,
           currentIndex: s.index,
           deadline: toDate(s.deadline),

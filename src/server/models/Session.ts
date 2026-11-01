@@ -16,7 +16,8 @@ const playerSchema = new Schema(
 
 const sessionSchema = new Schema(
   {
-    activityId: { type: String, required: true },
+    /** null for live sessions started without a prepared activity. */
+    activityId: { type: String, default: null },
     title: { type: String, required: true },
     activitySnapshot: { type: [questionSchema], default: [] },
     joinCode: { type: String, required: true, unique: true },

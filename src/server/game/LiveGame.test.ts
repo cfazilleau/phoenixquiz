@@ -145,6 +145,65 @@ describe('LiveGame flow', () => {
   });
 });
 
+describe('live questions', () => {
+  const live = (id: string, prompt = 'Live?'): Question => ({
+    id,
+    type: 'truefalse',
+    prompt,
+    points: 10,
+    timeLimitSec: null,
+    options: [
+      { id: 'true', text: 'True', correct: true },
+      { id: 'false', text: 'False', correct: false },
+    ],
+    acceptedAnswers: [],
+  });
+
+  it('can start an empty session with a question written live', async () => {
+    const { game, sessions } = makeGame({ questions: [] });
+    expect(game.admin({ type: 'start' }, 'admin')).toEqual({ ok: false, error: 'no_questions' });
+    expect(game.admin({ type: 'addQuestion', question: live('l1'), launch: true }, 'admin').ok).toBe(true);
+    expect(game.status).toBe('question');
+    expect(game.currentQuestion?.id).toBe('l1');
+    expect(game.answer('u1', 'l1', ['true']).ok).toBe(true);
+    await game.flushSaves();
+    expect(sessions.at(-1)?.questions.map((q) => q.id)).toEqual(['l1']);
+    expect(sessions.at(-1)?.startedAt).not.toBeNull();
+  });
+
+  it('inserts the question right after the current one', () => {
+    const { game } = makeGame();
+    game.admin({ type: 'start' }, 'admin'); // q1
+    game.admin({ type: 'addQuestion', question: live('l1'), launch: false }, 'admin');
+    expect(game.status).toBe('question');
+    expect(game.currentQuestion?.id).toBe('q1');
+    expect(game.viewFor('admin').total).toBe(4);
+    game.admin({ type: 'next' }, 'admin');
+    expect(game.currentQuestion?.id).toBe('l1');
+    game.admin({ type: 'next' }, 'admin');
+    expect(game.currentQuestion?.id).toBe('q2');
+  });
+
+  it('launches immediately and keeps ids unique', () => {
+    const { game } = makeGame();
+    game.admin({ type: 'start' }, 'admin');
+    game.admin({ type: 'addQuestion', question: live('q1', 'Dup id'), launch: true }, 'admin');
+    expect(game.currentQuestion?.prompt).toBe('Dup id');
+    expect(game.currentQuestion?.id).not.toBe('q1');
+    expect(game.viewFor('admin').index).toBe(1);
+  });
+
+  it('queues questions at the end while in the lobby, and refuses them once ended', () => {
+    const { game } = makeGame();
+    game.admin({ type: 'addQuestion', question: live('l1'), launch: false }, 'admin');
+    expect(game.status).toBe('lobby');
+    game.admin({ type: 'goto', index: 3 }, 'admin');
+    expect(game.currentQuestion?.id).toBe('l1');
+    game.admin({ type: 'end' }, 'admin');
+    expect(game.admin({ type: 'addQuestion', question: live('l2'), launch: true }, 'admin').ok).toBe(false);
+  });
+});
+
 describe('buzzer', () => {
   function buzzerGame() {
     const g = makeGame();

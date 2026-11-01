@@ -12,6 +12,8 @@ import type { Question } from '@/lib/types';
 import { useGame, type ActionResult } from '@/lib/useGame';
 import { cn } from '@/lib/utils';
 import { DiscordPostButton } from './DiscordPostButton';
+import { LiveComposer } from './LiveComposer';
+import { SaveAsActivityButton } from './SaveAsActivityButton';
 
 export function ControlPanel({ sessionId, code }: { sessionId: string; code: string }) {
   const t = useTranslations('control');
@@ -74,6 +76,7 @@ export function ControlPanel({ sessionId, code }: { sessionId: string; code: str
             {t('export')}
           </Button>
         </a>
+        {view.total > 0 && <SaveAsActivityButton sessionId={sessionId} />}
         {s === 'ended' && <DiscordPostButton sessionId={sessionId} />}
       </Card>
 
@@ -161,9 +164,11 @@ export function ControlPanel({ sessionId, code }: { sessionId: string; code: str
 
           {s === 'lobby' && (
             <Card>
-              <p className="text-lg">{t('lobbyHelp')}</p>
+              <p className="text-lg">{view.total === 0 ? t('lobbyHelpLive') : t('lobbyHelp')}</p>
             </Card>
           )}
+
+          {s !== 'ended' && <LiveComposer status={s} act={act} />}
         </div>
 
         <PlayersPanel view={view} act={act} />

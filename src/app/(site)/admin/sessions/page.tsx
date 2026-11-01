@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { getFormatter, getTranslations } from 'next-intl/server';
-import { Badge, Button, Card } from '@/components/ui';
+import { Badge, Button, Card, Input } from '@/components/ui';
 import { listSessions } from '@/server/activities';
-import { deleteSessionAction } from '../actions';
+import { deleteSessionAction, startLiveSessionAction } from '../actions';
 
 export default async function SessionsPage() {
   const t = await getTranslations('admin.sessions');
@@ -12,7 +12,13 @@ export default async function SessionsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-3xl font-black">{t('title')}</h1>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <h1 className="text-3xl font-black">{t('title')}</h1>
+        <form action={startLiveSessionAction} className="flex flex-wrap items-center gap-2">
+          <Input name="title" placeholder={t('livePlaceholder')} maxLength={120} className="w-64" />
+          <Button title={t('liveHint')}>⚡ {t('newLive')}</Button>
+        </form>
+      </div>
       {sessions.length === 0 && <p className="text-muted">{t('empty')}</p>}
       <Card className="overflow-x-auto p-0">
         <table className="w-full text-left text-sm">

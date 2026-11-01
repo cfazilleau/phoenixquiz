@@ -75,15 +75,45 @@ export async function deleteActivity(id: string) {
 export async function createSession(activityId: string, createdBy: string): Promise<string | null> {
   const a = await getActivity(activityId);
   if (!a) return null;
+  return insertSession({ activityId, title: a.title, questions: a.questions, createdBy });
+}
+
+/** A session with no prepared questions: the admin writes them during the game. */
+export function createLiveSession(title: string, createdBy: string): Promise<string> {
+  return insertSession({ activityId: null, title, questions: [], createdBy });
+}
+
+/** Copies a session's questions (including the ones written live) into a new activity. */
+export async function saveSessionAsActivity(sessionId: string, createdBy: string): Promise<string | null> {
+  if (!mongoose.isValidObjectId(sessionId)) return null;
+  await connectDb();
+  const s = await Session.findById(sessionId, { title: 1, activitySnapshot: 1 }).lean();
+  if (!s) return null;
+  const doc = await Activity.create({
+    title: s.title,
+    description: '',
+    createdBy,
+    questions: toQuestions(s.activitySnapshot).map((q) => ({ ...q, id: nanoid(10) })),
+  });
+  return doc._id.toString();
+}
+
+async function insertSession(input: {
+  activityId: string | null;
+  title: string;
+  questions: Question[];
+  createdBy: string;
+}): Promise<string> {
+  await connectDb();
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
       const doc = await Session.create({
-        activityId,
-        title: a.title,
-        activitySnapshot: a.questions,
+        activityId: input.activityId,
+        title: input.title,
+        activitySnapshot: input.questions,
         joinCode: joinCode(),
         presenterToken: nanoid(24),
-        createdBy,
+        createdBy: input.createdBy,
       });
       return doc._id.toString();
     } catch (err) {

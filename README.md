@@ -98,3 +98,14 @@ When a session has ended, **Post results to Discord** in the control panel inser
 4. Run the game: **Start**, then **Reveal**, **Leaderboard** and **Next**. Questions with a time limit close themselves. Others close with **Close answers**.
 5. **Buzzer questions**: the first press locks the buzzer. Mark the answer ✓/✗ to award points, then **Reset** or **Reset & lock out** to let others try.
 6. At the end: **Export .xlsx** and/or **Post results to Discord**.
+
+### Writing questions live
+
+You don't have to prepare everything in advance:
+
+- **Admin → Sessions → ⚡ New live session** starts a session with no questions. An activity with no questions yet can also be started.
+- In the control panel, the **Live question** panel opens the question editor for any type:
+  - **▶ Launch now** plays the question immediately (from the lobby, this also starts the game).
+  - **Play it next** queues it right after the current question. In the lobby, it's added to the list instead.
+- Live questions behave like prepared ones: timer, reveal, scores, buzzer and export.
+- **Save as activity** copies every question of the session, prepared or live, into a new activity you can reuse.

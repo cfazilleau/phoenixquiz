@@ -73,7 +73,11 @@
       "results": "Résultats",
       "control": "Panneau de contrôle",
       "delete": "Supprimer",
-      "back": "Toutes les sessions"
+      "back": "Toutes les sessions",
+      "newLive": "Nouvelle session en direct",
+      "livePlaceholder": "Titre de la session",
+      "liveDefaultTitle": "Quiz en direct",
+      "liveHint": "Lance une session sans questions préparées et écris-les pendant la partie"
     },
     "users": {
       "title": "Utilisateurs",
@@ -123,7 +127,21 @@
     "saveError": "Impossible d'enregistrer : {error}",
     "unsaved": "Modifications non enregistrées",
     "saveFirst": "Enregistre avant de lancer",
-    "startSession": "Lancer une session"
+    "startSession": "Lancer une session",
+    "issues": {
+      "prompt_empty": "écris la question",
+      "option_empty": "chaque option doit avoir un texte",
+      "answer_empty": "les réponses acceptées ne peuvent pas être vides",
+      "image_url": "l'URL de l'image est invalide",
+      "time_limit": "le temps limite doit être entre 5 et 600 secondes (ou vide)",
+      "options_min": "ajoute au moins 2 options",
+      "one_correct": "coche exactement une bonne réponse",
+      "some_correct": "coche au moins une bonne réponse",
+      "accepted_min": "ajoute au moins une réponse acceptée",
+      "number_missing": "saisis le nombre correct",
+      "title_empty": "l'activité doit avoir un titre",
+      "invalid": "quelque chose n'est pas valide"
+    }
   },
   "game": {
     "connecting": "Connexion…",
@@ -190,6 +208,19 @@
     "answeredOf": "{answered} / {total} ont répondu",
     "expected": "Attendu :",
     "lobbyHelp": "Partage le code ou ouvre l'écran présentateur. Les joueurs apparaissent à droite quand ils rejoignent. Clique sur Lancer quand tout le monde est là.",
+    "lobbyHelpLive": "Cette session n'a pas encore de questions. Partage le code, puis écris la première question ci-dessous et lance-la quand tout le monde est là.",
+    "live": {
+      "title": "Question en direct",
+      "hint": "Choisis un type pour écrire une question à la volée. Elle passe juste après la question en cours, ou tout de suite.",
+      "launch": "Lancer maintenant",
+      "queueNext": "Jouer ensuite",
+      "queueLobby": "Ajouter à la liste",
+      "discard": "Abandonner",
+      "invalid": "Pas prête : {error}",
+      "saveAsActivity": "Enregistrer comme activité",
+      "savedAsActivity": "Enregistrée comme activité",
+      "saveFailed": "Échec, réessayer"
+    },
     "answers": "Réponses ({count})",
     "noAnswers": "Aucune réponse pour l'instant.",
     "overridden": "modifiée",
