@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-ink: #0f0b1e;
+  --color-panel: #1b1533;
+  --color-panel-2: #251d45;
+  --color-line: #3a2f66;
+  --color-muted: #a59cc9;
+  --color-phoenix: #ff6b2c;
+  --color-phoenix-2: #ffb23f;
+  --color-opt-1: #e21b3c;
+  --color-opt-2: #1368ce;
+  --color-opt-3: #d89e00;
+  --color-opt-4: #26890c;
+  --color-opt-5: #864cbf;
+  --color-opt-6: #0aa3a3;
+  --color-opt-7: #c2410c;
+  --color-opt-8: #be185d;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body {
+  background: var(--color-ink);
+  color: #f4f1ff;
+  min-height: 100%;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at top left, rgb(255 107 44 / 0.12), transparent 50%),
+    radial-gradient(ellipse at bottom right, rgb(134 76 191 / 0.18), transparent 55%);
+  background-attachment: fixed;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-pop {
+  animation: pop 0.35s ease-out both;
+}
